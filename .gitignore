@@ -1,0 +1,47 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.idea/
+.project
+.settings/
+.vscode/
+connect.lock
+coverage/
+lib/generated/
+nbactions.xml
+nb-configuration.xml
+nbproject/
+project.lock
+pubspec-freezed.yaml
+test_report.json
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Android
+android/**/generated/
+android/app/src/main/res/drawable-*/
+android/local.properties
+
+# iOS
+ios/.generated/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Pods/
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../models/smartphone.dart';
 import '../providers/smartphone_provider.dart';
+import '../providers/cart_provider.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Smartphone smartphone;
@@ -10,6 +12,8 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormat = NumberFormat.currency(locale: 'id', symbol: 'Rp', decimalDigits: 0);
+
     return Scaffold(
       backgroundColor: const Color(0xFFf6f7f8),
       appBar: AppBar(
@@ -111,7 +115,7 @@ class DetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Rp ${smartphone.harga}',
+                    currencyFormat.format(smartphone.harga),
                     style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color(0xFF137fec)),
                   ),
                   const SizedBox(height: 24),
@@ -220,35 +224,50 @@ class DetailsScreen extends StatelessWidget {
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white,
           border: Border(top: BorderSide(color: Colors.grey.shade200)),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5)),
+          ],
         ),
         child: SafeArea(
           child: Row(
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Buy Now logic
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Proceeding to checkout...')),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF137fec),
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 56),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    elevation: 4,
-                    shadowColor: const Color(0xFF137fec).withOpacity(0.4),
+                    elevation: 0,
                   ),
                   child: const Text('Buy Now', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(width: 16),
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade200),
-                  borderRadius: BorderRadius.circular(12),
+              InkWell(
+                onTap: () {
+                  context.read<CartProvider>().addItem(smartphone);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${smartphone.nama} added to cart')),
+                  );
+                },
+                child: Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF137fec).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.add_shopping_cart, color: Color(0xFF137fec)),
                 ),
-                child: const Icon(Icons.shopping_cart, color: Color(0xFF0d141b)),
               ),
             ],
           ),

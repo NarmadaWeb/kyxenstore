@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 import '../providers/smartphone_provider.dart';
+import '../providers/cart_provider.dart';
 import '../models/smartphone.dart';
 
 class MarketplaceScreen extends StatelessWidget {
@@ -126,6 +128,8 @@ class MarketplaceScreen extends StatelessWidget {
   }
 
   Widget _buildMarketplaceItem(BuildContext context, Smartphone smartphone, bool isNew) {
+    final currencyFormat = NumberFormat.currency(locale: 'id', symbol: 'Rp', decimalDigits: 0);
+
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, '/details', arguments: smartphone),
       child: Container(
@@ -200,8 +204,8 @@ class MarketplaceScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Rp ${smartphone.harga}',
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF137fec)),
+                        currencyFormat.format(smartphone.harga),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF137fec)),
                       ),
                     ],
                   ),
@@ -254,15 +258,20 @@ class MarketplaceScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFf1f5f9),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Text(
-                          'View Details',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF0d141b)),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          context.read<CartProvider>().addItem(smartphone);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${smartphone.nama} added to cart')),
+                          );
+                        },
+                        icon: const Icon(Icons.add_shopping_cart, size: 18),
+                        label: const Text('Add'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF137fec),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         ),
                       ),
                     ],

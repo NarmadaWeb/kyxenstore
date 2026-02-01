@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/smartphone_provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/cart_provider.dart';
 import 'screens/navigation_container.dart';
 import 'screens/details_screen.dart';
 import 'screens/add_edit_screen.dart';
@@ -18,6 +20,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SmartphoneProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
       ],
       child: MaterialApp(
         title: 'Smartphone Marketplace',

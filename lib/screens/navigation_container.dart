@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_provider.dart';
 import 'explore_screen.dart';
 import 'marketplace_screen.dart';
+import 'cart_screen.dart';
+import 'profile_screen.dart';
 
 class NavigationContainer extends StatefulWidget {
   const NavigationContainer({super.key});
@@ -15,8 +19,8 @@ class _NavigationContainerState extends State<NavigationContainer> {
   final List<Widget> _screens = [
     const ExploreScreen(),
     const MarketplaceScreen(),
-    const Scaffold(body: Center(child: Text('Cart'))),
-    const Scaffold(body: Center(child: Text('Profile'))),
+    const CartScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -39,11 +43,22 @@ class _NavigationContainerState extends State<NavigationContainer> {
           showUnselectedLabels: true,
           selectedFontSize: 10,
           unselectedFontSize: 10,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Saved'),
-            BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: 'Cart'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          items: [
+            const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            const BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Saved'),
+            BottomNavigationBarItem(
+              icon: Consumer<CartProvider>(
+                builder: (context, cart, child) {
+                  return Badge(
+                    label: Text(cart.itemCount.toString()),
+                    isLabelVisible: cart.itemCount > 0,
+                    child: const Icon(Icons.shopping_bag),
+                  );
+                },
+              ),
+              label: 'Cart',
+            ),
+            const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],
         ),
       ),
