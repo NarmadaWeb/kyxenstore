@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 import '../providers/smartphone_provider.dart';
+import '../providers/cart_provider.dart';
 import '../models/smartphone.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -173,6 +175,8 @@ class SmartphoneGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormat = NumberFormat.currency(locale: 'id', symbol: 'Rp', decimalDigits: 0);
+
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, '/details', arguments: smartphone),
       child: Container(
@@ -219,13 +223,43 @@ class SmartphoneGridItem extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              'Rp ${smartphone.harga}',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF137fec),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  currencyFormat.format(smartphone.harga),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF137fec),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    context.read<CartProvider>().addItem(smartphone);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${smartphone.nama} added to cart'),
+                        duration: const Duration(seconds: 1),
+                        action: SnackBarAction(
+                          label: 'VIEW',
+                          onPressed: () {
+                            // This might need a way to switch tabs, but for now just a message
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF137fec),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.add_shopping_cart, size: 18, color: Colors.white),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             const Divider(height: 1, color: Color(0xFFf1f5f9)),
